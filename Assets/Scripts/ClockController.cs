@@ -14,6 +14,8 @@ public class ClockController : MonoBehaviour {
 
     void Awake ()
     {
+        Application.runInBackground = true;
+
         hourPointer = transform.Find("hour").gameObject;
         minutePointer = transform.Find("minute").gameObject;
         secondPointer = transform.Find("second").gameObject;
@@ -30,6 +32,7 @@ public class ClockController : MonoBehaviour {
 	
 	void Update ()
     {
+        //Update time
         hourPointer.transform.RotateAround(middle, direction, (Time.deltaTime / (60 * 60 * 60)) * 360);
         minutePointer.transform.RotateAround(middle, direction, (Time.deltaTime / (60 * 60)) * 360);
         secondPointer.transform.RotateAround(middle, direction, Time.deltaTime / 60 * 360);
