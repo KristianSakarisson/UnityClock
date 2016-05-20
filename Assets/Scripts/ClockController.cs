@@ -8,7 +8,11 @@ public class ClockController : MonoBehaviour {
     GameObject minutePointer;
     GameObject secondPointer;
 
-    Vector3 middle;
+    private const float
+        hoursToDegrees = 360f / 12f,
+        minutesToHourDegrees = 360f / 60f / 12f,
+        minutesToDegrees = 360f / 60f,
+        secondsToDegrees = 360f / 60f;
 
     Vector3 direction = new Vector3(0f, 0f, -1f);
 
@@ -23,18 +27,16 @@ public class ClockController : MonoBehaviour {
         minutePointer = transform.Find("minute").gameObject;
         secondPointer = transform.Find("second").gameObject;
 
-        middle = transform.position;
-
         DateTime now = System.DateTime.Now;
 
         minutePassed = now.Second;
 
         //Calibrate current time
-        secondPointer.transform.RotateAround(middle, direction, (now.Second / 60f * 360f));
+        secondPointer.transform.RotateAround(transform.position, direction, now.Second * secondsToDegrees);
 
-        minutePointer.transform.RotateAround(middle, direction, now.Minute / 60f * 360f);
+        minutePointer.transform.RotateAround(transform.position, direction, now.Minute * minutesToDegrees);
 
-        hourPointer.transform.RotateAround(middle, direction, now.Hour / 12f * 360f + now.Minute / (12f * 60f) * 360f);
+        hourPointer.transform.RotateAround(transform.position, direction, now.Hour * hoursToDegrees + (now.Minute * minutesToDegrees) / 12f);
 
     }
 	
@@ -45,14 +47,14 @@ public class ClockController : MonoBehaviour {
 
         if (secondPassed >= 1)
         {
-            secondPointer.transform.RotateAround(middle, direction, 1f / 60f * 360f);
+            secondPointer.transform.RotateAround(transform.position, direction, secondsToDegrees);
             secondPassed %= 1;
         }
         //Rotate minute and hour pointers only when a full minute has passed
         if (minutePassed >= 60)
         {
-            minutePointer.transform.RotateAround(middle, direction, 1f / 60 * 360);
-            hourPointer.transform.RotateAround(middle, direction, 1f / (60 * 12) * 360);
+            minutePointer.transform.RotateAround(transform.position, direction, minutesToDegrees);
+            hourPointer.transform.RotateAround(transform.position, direction, minutesToHourDegrees);
             minutePassed %= 60;
         }
     }
